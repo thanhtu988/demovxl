@@ -1,0 +1,18 @@
+digraph fsm_tuning {
+  rankdir=TB; dpi=200; nodesep=0.6;
+  node [shape=box, style="rounded,filled", fontname="DejaVu Sans", fontsize=11];
+  edge [fontname="DejaVu Sans", fontsize=9];
+  entry [shape=point, width=0.15];
+  RED   [label="TUNE_RED\nchỉnh T_ĐỎ\nLCD: TUNE >RED  : 05s", fillcolor="#fde2e2"];
+  GREEN [label="TUNE_GREEN\nchỉnh T_XANH\nLCD: TUNE >GREEN: 03s", fillcolor="#e2f5e2"];
+  AMBER [label="TUNE_AMBER\nchỉnh T_VÀNG\nLCD: TUNE >AMBER: 02s", fillcolor="#fff4cc"];
+  exit  [label="về AUTO\n(fsm_mode xử lý)", shape=ellipse, style=dashed];
+  entry -> RED [label="B1 từ MANUAL /\nfsm_tuning_enter():\nsao chép g_time_* ra bản tạm"];
+  RED -> GREEN [label="B2"];
+  GREEN -> AMBER [label="B2"];
+  AMBER -> RED [label="B2"];
+  RED -> RED [label="B3/B4: +/-1 s\n(giữ ≥1 s: 5 lần/s)\nUSER: Lưu"];
+  GREEN -> GREEN [label="B3/B4 | USER"];
+  AMBER -> AMBER [label="B3/B4 | USER"];
+  {RED GREEN AMBER} -> exit [style=dashed, label="B1 / fsm_tuning_exit()"];
+}

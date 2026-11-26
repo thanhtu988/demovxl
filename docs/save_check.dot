@@ -1,0 +1,10 @@
+digraph save { dpi=200; rankdir=TB;
+  node [shape=box, style="rounded", fontname="DejaVu Sans", fontsize=11]; edge [fontname="DejaVu Sans", fontsize=10];
+  u [label="USER = Lưu (bản tạm R, G, Y)"];
+  c1 [shape=diamond, label="G ≥ 1 và Y ≥ 1 ?"];
+  c2 [shape=diamond, label="R = G + Y ?"];
+  e1 [label="LCD dòng 2: ERR: G,Y >= 1s (2 s)\ng_time_* giữ nguyên", color="#c0392b"];
+  e2 [label="LCD dòng 2: ERR: R!=G+Y (2 s)\ng_time_* giữ nguyên", color="#c0392b"];
+  ok [label="g_time_* = bản tạm\nLCD dòng 2: SAVED (2 s)", color="#1e8449"];
+  u -> c1; c1 -> e1 [label="sai"]; c1 -> c2 [label="đúng"]; c2 -> e2 [label="sai"]; c2 -> ok [label="đúng"];
+}

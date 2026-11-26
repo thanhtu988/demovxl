@@ -1,0 +1,17 @@
+digraph blocks { dpi=200; rankdir=TB; compound=true; nodesep=0.25; ranksep=0.45;
+  node [shape=box, style="rounded,filled", fontname="DejaVu Sans", fontsize=10, fillcolor=white, width=1.6];
+  edge [color="#444444", penwidth=1.6, arrowsize=0.8];
+  subgraph cluster_app { label="Lớp 4 – Ứng dụng: máy trạng thái (không gọi HAL)"; fontname="DejaVu Sans Bold"; fontsize=11; style="filled,rounded"; fillcolor="#e8f0fe";
+    {rank=same; mode [label="fsm_mode (A)\nINIT/AUTO/MANUAL/TUNING"]; aut [label="fsm_automatic (B)"]; man [label="fsm_manual (B)"]; tun [label="fsm_tuning (C)", fillcolor="#fde2e2"];} }
+  subgraph cluster_mod { label="Lớp 3 – Module phụ trợ (driver): nơi duy nhất gọi HAL"; fontname="DejaVu Sans Bold"; fontsize=11; style="filled,rounded"; fillcolor="#e9f7ef";
+    {rank=same; stim [label="software_timer (B)"]; btn [label="button (B)"]; tl [label="traffic_light (B)\nbảo vệ lớp 2"]; disp [label="display (C)\n3 màn hình + thông báo", fillcolor="#fde2e2"];}
+    {rank=same; lcd [label="lcd (C)\nPCF8574, 4-bit", fillcolor="#fde2e2"]; dht [label="dht20 (C)\nnon-blocking", fillcolor="#fde2e2"]; bus [label="i2c_bus (C)\nscan + recover", fillcolor="#fde2e2"];}
+    disp -> lcd [penwidth=1]; disp -> dht [penwidth=1]; }
+  subgraph cluster_sch { label="Lớp 2 – Scheduler O(1) (A), tick 10 ms"; fontname="DejaVu Sans Bold"; fontsize=11; style="filled,rounded"; fillcolor="#fef5e7";
+    sch [label="SCH_Init / Add_Task / Delete_Task / Update / Dispatch_Tasks", width=5]; }
+  subgraph cluster_hw { label="Lớp 1 – Phần cứng STM32F103RB (HAL)"; fontname="DejaVu Sans Bold"; fontsize=11; style="filled,rounded"; fillcolor="#f2f3f4";
+    {rank=same; gpio [label="GPIO\nđèn D3–D6, nút D7–D10\nPC13, PA5, PC9"]; i2c [label="I2C1\nLCD 0x27, DHT20 0x38"]; tim [label="TIM2\nngắt 10 ms"];} }
+  man -> btn [ltail=cluster_app, lhead=cluster_mod, label="  gọi API (.h)", fontname="DejaVu Sans", fontsize=9];
+  dht -> sch [ltail=cluster_mod, lhead=cluster_sch, label="  task + one-shot", fontname="DejaVu Sans", fontsize=9];
+  sch -> i2c [ltail=cluster_sch, lhead=cluster_hw, dir=back, label="  SCH_Update() trong ngắt TIM2", fontname="DejaVu Sans", fontsize=9];
+}
