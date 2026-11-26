@@ -1,0 +1,21 @@
+# Build STM32CubeIDE
+Debug/
+Release/
+*.o
+*.d
+*.elf
+*.map
+*.su
+*.list
+*.bin
+*.hex
+.metadata/
+
+# Test PC
+test/pc/test_c
+test/pc/test_c.exe
+
+# He dieu hanh
+.DS_Store
+Thumbs.db
+desktop.ini
